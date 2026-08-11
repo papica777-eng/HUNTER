@@ -5,30 +5,20 @@ import { MobileBGScraper } from './scrapers/MobileBG_Scraper';
 import { ImotBGScraper } from './scrapers/ImotBG_Scraper';
 import { PriceAnalyzer } from './analysis/PriceAnalyzer';
 import { ListingStore } from './storage/ListingStore';
-import { LovetsBot } from './bot/TelegramBot';
+import { TelegramUplink, MASTER_UPLINK_CODE } from './bot/TelegramUplink';
 import { BaseScraper } from './scrapers/BaseScraper';
 import { Listing } from './types';
 
 dotenv.config();
 
-const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const CHANNEL_ID = process.env.TELEGRAM_VIP_CHANNEL_ID || '';
+const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'MOCK_TOKEN';
+const CHANNEL_ID = process.env.TELEGRAM_VIP_CHANNEL_ID || '-1001234567890';
 const SCAN_INTERVAL = parseInt(process.env.SCAN_INTERVAL_SECONDS || '30', 10);
 const DISCOUNT_THRESHOLD = parseInt(process.env.PRICE_DISCOUNT_THRESHOLD || '20', 10);
 
-if (!TELEGRAM_TOKEN || TELEGRAM_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
-  console.error('❌ TELEGRAM_BOT_TOKEN не е конфигуриран! Виж .env.example');
-  process.exit(1);
-}
-
-if (!CHANNEL_ID) {
-  console.error('❌ TELEGRAM_VIP_CHANNEL_ID не е конфигуриран!');
-  process.exit(1);
-}
-
 const store = new ListingStore();
 const analyzer = new PriceAnalyzer(store, DISCOUNT_THRESHOLD);
-const bot = new LovetsBot(TELEGRAM_TOKEN, CHANNEL_ID, store);
+const bot = new TelegramUplink(TELEGRAM_TOKEN, CHANNEL_ID, store);
 
 const scrapers: BaseScraper[] = [];
 
