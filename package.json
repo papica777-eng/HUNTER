@@ -1,0 +1,28 @@
+{
+  "name": "aeterna-hunter",
+  "version": "1.0.0",
+  "description": "HUNTER — VIP Telegram бот за мигновени известия при евтини обяви в OLX.bg, Mobile.bg и Imot.bg",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
+  },
+  "keywords": ["olx", "mobile.bg", "imot.bg", "scraper", "telegram", "bot", "deals"],
+  "author": "Dimitar Prodromov <papica777@gmail.com>",
+  "license": "PROPRIETARY",
+  "dependencies": {
+    "grammy": "^1.30.0",
+    "cheerio": "^1.0.0",
+    "node-cron": "^3.0.3",
+    "better-sqlite3": "^11.0.0",
+    "dotenv": "^16.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0",
+    "@types/better-sqlite3": "^7.6.0",
+    "@types/node-cron": "^3.0.11",
+    "ts-node": "^10.9.2"
+  }
+}
