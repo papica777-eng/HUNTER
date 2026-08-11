@@ -508,7 +508,10 @@
     <div id="active-license-box" class="active-license-card">
       <div class="license-header">
         <div>
-          <h3 style="color:#fff;">🔑 Вашият Активен Лицензионен Ключ</h3>
+          <h3 style="color:#fff; display:flex; align-items:center; gap:0.5rem;">
+            <svg class="svg-icon" style="width:20px; height:20px; stroke:var(--accent-cyan);" viewBox="0 0 24 24"><path d="M21 2l-2 2m-1.5 1.5l-3 3m-3.5 3.5L4 19l-2 3 3-2 7-7m3.5-3.5l3-3m-1.5-1.5l2-2M7 17l-2-2"></path><circle cx="16.5" cy="7.5" r="4.5"></circle></svg>
+            Вашият Активен Лицензионен Ключ
+          </h3>
           <p style="color:var(--text-muted); font-size:0.9rem;">Запазен във Вашия браузър</p>
         </div>
         <div class="status-badge" style="border-color:var(--accent-cyan); color:var(--accent-cyan);">
@@ -567,7 +570,7 @@
         </div>
         <h3 class="card-title">AI Чатбот Автопилот</h3>
         <p class="card-desc">Персонализиран AI бот за Facebook Messenger и Instagram DMs за български бизнеси.</p>
-        <div class="card-price">99 лв <span>однократно + 49 лв/мес</span></div>
+        <div class="card-price">99 лв <span>еднократно + 49 лв/мес</span></div>
         <ul class="card-features">
           <li><svg class="check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Отговаря за 2 секунди на Български</li>
           <li><svg class="check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Затваря продажби & събира телефони</li>
@@ -600,7 +603,10 @@
 
     <!-- License Validator Tool -->
     <div class="validator-section">
-      <h3>🔍 Проверка на Лицензионен Ключ</h3>
+      <h3 style="display:flex; align-items:center; justify-content:center; gap:0.5rem;">
+        <svg class="svg-icon" style="width:22px; height:22px; stroke:var(--accent-cyan);" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Проверка на Лицензионен Ключ
+      </h3>
       <p style="color:var(--text-muted); margin-top:0.5rem;">Въведете вашия ключ, за да проверите валидността и оставащия период.</p>
       
       <div class="validator-input-group">
@@ -746,7 +752,7 @@
       closeCheckout();
       renderActiveLicense();
 
-      alert(`🎉 Успешно плащане!\n\nВашият Активационен Ключ: ${key}\n\nКлючът е запазен във вашия профил.`);
+      alert(`Успешно плащане!\n\nВашият Активационен Ключ: ${key}\n\nКлючът е запазен във вашия профил.`);
     }
 
     function renderActiveLicense() {
@@ -770,10 +776,10 @@
 
       if (input.startsWith('AETERNA-')) {
         res.style.color = 'var(--accent-green)';
-        res.innerHTML = '✅ ВАЛИДЕН КЛЮЧ • АКТИВЕН АБОНАМЕНТ (30 Дни Оставащи)';
+        res.innerHTML = 'ВАЛИДЕН КЛЮЧ • АКТИВЕН АБОНАМЕНТ (30 Дни Оставащи)';
       } else {
         res.style.color = '#ff4444';
-        res.innerHTML = '❌ НЕВАЛИДЕН ИЛИ ИЗТЕКЪЛ КЛЮЧ';
+        res.innerHTML = 'НЕВАЛИДЕН ИЛИ ИЗТЕКЪЛ КЛЮЧ';
       }
     }
 
