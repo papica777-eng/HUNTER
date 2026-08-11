@@ -1,6 +1,8 @@
 # 🎯 HUNTER — VIP Telegram Бот за Бързи Обяви (OLX.bg, Mobile.bg, Imot.bg)
 
-> Мигновени известия в Telegram при обяви под пазарната цена в OLX.bg, Mobile.bg и Imot.bg.
+![AETERNA HUNTER Services Poster](assets/poster.png)
+
+> **Жив Клиентски Портал за Абонаменти:** [https://papica777-eng.github.io/HUNTER/](https://papica777-eng.github.io/HUNTER/)
 
 [![Made by AETERNA](https://img.shields.io/badge/Made%20by-AETERNA-blueviolet)](https://github.com/AETERNA-AIC)
 
@@ -12,6 +14,15 @@
 2. **Сравнява** цената с пазарната средна (историческа + статични анкерни цени)
 3. **Изпраща** мигновено известие в Telegram VIP канал при обява **20%+ под пазарната цена**
 4. **Дедупликира** — всяка обява се изпраща само веднъж (SQLite WAL)
+
+---
+
+## 💎 Клиентски Портал & Автоматични Ключове
+
+Посетете уеб портала [https://papica777-eng.github.io/HUNTER/](https://papica777-eng.github.io/HUNTER/) за:
+- Избор на абонаментни планове (HUNTER VIP, AI Чатбот Автопилот, Web3 Одит)
+- Моментално генериране на уникален **Лицензионен Ключ** (`AETERNA-HNTR-XXXX-YYYY-2026`)
+- Проверка за оставащи дни и валидност на абонамента
 
 ---
 

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AETERNA HUNTER — VIP Портал за Услуги & Абонаменти</title>
+  <meta name="description" content="HUNTER VIP Deal Scraper, AI Sales Bots & Web3 Security Audits. Портал за клиентски абонаменти и лицензи.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #05070f;
+      --card-bg: rgba(13, 18, 36, 0.75);
+      --card-border: rgba(0, 240, 255, 0.2);
+      --accent-cyan: #00f0ff;
+      --accent-purple: #7000ff;
+      --accent-green: #00ff88;
+      --accent-gold: #ffd700;
+      --text-main: #f0f4f8;
+      --text-muted: #8a99ad;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Background Canvas */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Layout Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: #000;
+      font-weight: 900;
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, #fff, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.2); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* Hero Section & Poster Banner */
+    .hero {
+      margin: 2.5rem 0;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.8rem;
+      font-weight: 900;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 750px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .poster-box {
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 50px rgba(0, 240, 255, 0.15);
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .poster-box img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Active License Box */
+    .active-license-card {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(112, 0, 255, 0.1) 100%);
+      border: 1px solid var(--accent-cyan);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 3rem;
+      display: none;
+    }
+
+    .license-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .license-key-display {
+      font-family: var(--font-mono);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      letter-spacing: 2px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px dashed var(--accent-cyan);
+    }
+
+    .license-meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .meta-item {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+    }
+
+    .meta-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    /* Pricing & Services Grid */
+    .services-title {
+      font-size: 2rem;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .pricing-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.2rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 15px 35px rgba(0, 240, 255, 0.2);
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent-gold);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+    }
+
+    .featured-tag {
+      position: absolute;
+      top: -14px;
+      right: 20px;
+      background: var(--accent-gold);
+      color: #000;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      min-height: 50px;
+    }
+
+    .card-price {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      margin-bottom: 1.5rem;
+    }
+
+    .card-price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .card-features {
+      list-style: none;
+      margin-bottom: 2rem;
+      flex-grow: 1;
+    }
+
+    .card-features li {
+      padding: 0.4rem 0;
+      color: var(--text-main);
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-features li::before {
+      content: "✓";
+      color: var(--accent-green);
+      font-weight: bold;
+    }
+
+    .btn-buy {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: #fff;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-buy:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+      box-shadow: 0 5px 20px rgba(0, 240, 255, 0.4);
+    }
+
+    /* License Validator Tool */
+    .validator-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .validator-input-group {
+      display: flex;
+      max-width: 600px;
+      margin: 1.5rem auto;
+      gap: 0.5rem;
+    }
+
+    .validator-input {
+      flex: 1;
+      padding: 0.9rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .validator-input:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .validator-btn {
+      padding: 0.9rem 1.5rem;
+      background: var(--accent-cyan);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Modal Checkout */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: #0d1224;
+      border: 1px solid var(--accent-cyan);
+      border-radius: 16px;
+      width: 90%;
+      max-width: 550px;
+      padding: 2.5rem;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.2rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+    }
+
+    .payment-option {
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .payment-option:hover, .payment-option.selected {
+      border-color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 3rem 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-container">
+        <div class="logo-badge">AETERNA</div>
+        <div class="logo-text">HUNTER SYSTEMS</div>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>HUNTER v1.0 ONLINE</span>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1 class="hero-title">Суверенни Автоматизации, AI Ботове & Сигурност</h1>
+      <p class="hero-subtitle">Вземете нечестно предимство пред конкуренцията с нашите бързи скрапери за обяви, AI търговски ботове и одити за сигурност.</p>
+
+      <!-- Banner Poster -->
+      <div class="poster-box">
+        <img src="assets/poster.png" alt="AETERNA HUNTER Services Poster">
+      </div>
+    </section>
+
+    <!-- Active License Card (Shown if client has paid key) -->
+    <div id="active-license-box" class="active-license-card">
+      <div class="license-header">
+        <div>
+          <h3 style="color:#fff;">🔑 Вашият Активен Лицензионен Ключ</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Запазен във Вашия браузър</p>
+        </div>
+        <div class="status-badge" style="border-color:var(--accent-cyan); color:var(--accent-cyan);">
+          <span id="lic-status">АКТИВЕН</span>
+        </div>
+      </div>
+
+      <div class="license-key-display" id="lic-key-text">AETERNA-HNTR-98F2-A41C-2026</div>
+
+      <div class="license-meta">
+        <div class="meta-item">
+          <div class="meta-label">Услуга</div>
+          <div class="meta-value" id="lic-service-name">HUNTER VIP Access</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Оставащи Дни</div>
+          <div class="meta-value" id="lic-days-left" style="color:var(--accent-green);">30 дни</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Изтича На</div>
+          <div class="meta-value" id="lic-exp-date">2026-09-11</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services & Pricing -->
+    <h2 class="services-title">Изберете Вашия План</h2>
+    <div class="pricing-grid">
+
+      <!-- Plan 1: HUNTER VIP -->
+      <div class="pricing-card featured">
+        <div class="featured-tag">🔥 НАЙ-ПОПУЛЯРЕН</div>
+        <div class="card-icon">🎯</div>
+        <h3 class="card-title">HUNTER VIP Бот</h3>
+        <p class="card-desc">Telegram бот за мигновени известия при евтини обяви в OLX.bg, Mobile.bg и Imot.bg.</p>
+        <div class="card-price">29 лв <span>/ месец</span></div>
+        <ul class="card-features">
+          <li>Сканиране на всеки 10 секунди</li>
+          <li>OLX.bg, Mobile.bg & Imot.bg</li>
+          <li>Известия за обяви 20%+ под пазара</li>
+          <li>Инлайн бутон "Виж обявата"</li>
+          <li>Дедупликация (без повторения)</li>
+        </ul>
+        <button class="btn-buy" onclick="openCheckout('HUNTER VIP Бот за Обяви', 29, 'month')">Вземи Абонамент</button>
+      </div>
+
+      <!-- Plan 2: AI Sales Bot Setup -->
+      <div class="pricing-card">
+        <div class="card-icon">🤖</div>
+        <h3 class="card-title">AI Чатбот Автопилот</h3>
+        <p class="card-desc">Персонализиран AI бот за Facebook Messenger и Instagram DMs за български бизнеси.</p>
+        <div class="card-price">99 лв <span>однократно + 49 лв/мес</span></div>
+        <ul class="card-features">
+          <li>Отговаря за 2 секунди на Български</li>
+          <li>Затваря продажби & събира телефони</li>
+          <li>Anti-Hallucination Layer (0% грешки)</li>
+          <li>Facebook & Instagram Интеграция</li>
+          <li>24/7 Автоматично обслужване</li>
+        </ul>
+        <button class="btn-buy" onclick="openCheckout('AI Чатбот Автопилот', 99, 'once')">Поръчай Настройка</button>
+      </div>
+
+      <!-- Plan 3: Web3 Security Audit -->
+      <div class="pricing-card">
+        <div class="card-icon">🛡️</div>
+        <h3 class="card-title">Web3 & PQC Одит</h3>
+        <p class="card-desc">Z3 Формална верификация и Пост-Квантов одит на смарт договори и софтуер.</p>
+        <div class="card-price">490 лв <span>/ одит ($250)</span></div>
+        <ul class="card-features">
+          <li>Z3 Formal Logic Verification</li>
+          <li>Reentrancy & Access Control Proof</li>
+          <li>NIST Post-Quantum Cryptography check</li>
+          <li>Пълен технически доклад & сертификат</li>
+          <li>24/7 Спешна поддръжка</li>
+        </ul>
+        <button class="btn-buy" onclick="openCheckout('Web3 & PQC Одит', 490, 'once')">Заяви Одит</button>
+      </div>
+
+    </div>
+
+    <!-- License Validator Tool -->
+    <div class="validator-section">
+      <h3>🔍 Проверка на Лицензионен Ключ</h3>
+      <p style="color:var(--text-muted); margin-top:0.5rem;">Въведете вашия ключ, за да проверите валидността и оставащия период.</p>
+      
+      <div class="validator-input-group">
+        <input type="text" id="val-input" class="validator-input" placeholder="AETERNA-XXXX-YYYY-ZZZZ">
+        <button class="validator-btn" onclick="validateKey()">Провери</button>
+      </div>
+      
+      <div id="val-result" style="display:none; margin-top:1rem; font-weight:700;"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2026 AETERNA HUNTER SYSTEMS — Dimitar Prodromov. Всички права запазени.</p>
+      <p style="margin-top:0.5rem; font-size:0.8rem;">Sovereign Architecture • Zero Entropy • Pure Execution</p>
+    </footer>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkout-modal" class="modal-backdrop">
+    <div class="modal-content">
+      <span class="modal-close" onclick="closeCheckout()">&times;</span>
+      <h3 id="modal-service-title" style="margin-bottom:0.5rem; color:var(--accent-cyan);">Поръчка на Услуга</h3>
+      <p id="modal-service-price" style="font-size:1.5rem; font-weight:900; margin-bottom:1.5rem;"></p>
+
+      <h4 style="margin-bottom:0.75rem; font-size:0.95rem; color:var(--text-muted);">ИЗБЕРЕТЕ НАЧИН НА ПЛАЩАНЕ:</h4>
+
+      <div class="payment-option selected" onclick="selectPayment(this, 'crypto')">
+        <div>
+          <strong>💎 USDT / SOL / TRX (Крипто)</strong>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Моментална автоматична активация</div>
+        </div>
+        <span style="color:var(--accent-green);">Препоръчано</span>
+      </div>
+
+      <div class="payment-option" onclick="selectPayment(this, 'revolut')">
+        <div>
+          <strong>💳 Revolut / Банков превод</strong>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Заплащане в лв. (BGN) или EUR</div>
+        </div>
+      </div>
+
+      <div class="payment-option" onclick="selectPayment(this, 'sponsors')">
+        <div>
+          <strong>💖 GitHub Sponsors</strong>
+          <div style="font-size:0.8rem; color:var(--text-muted);">Месечен абонамент през GitHub</div>
+        </div>
+      </div>
+
+      <button class="btn-buy" style="margin-top:1.5rem;" onclick="processPayment()">Потвърди Плащането & Генерирай Ключ</button>
+    </div>
+  </div>
+
+  <script>
+    // Live Canvas Background Animation
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, particles = [];
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        size: Math.random() * 2 + 1
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = 'rgba(0, 240, 255, 0.3)';
+      
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Checkout Logic & Key Generation
+    let currentService = '';
+    let currentPrice = 0;
+    let selectedMethod = 'crypto';
+
+    function openCheckout(title, price, type) {
+      currentService = title;
+      currentPrice = price;
+      document.getElementById('modal-service-title').innerText = title;
+      document.getElementById('modal-service-price').innerText = price + ' лв. ' + (type === 'month' ? '/ месец' : '');
+      document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkout-modal').style.display = 'none';
+    }
+
+    function selectPayment(el, method) {
+      document.querySelectorAll('.payment-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedMethod = method;
+    }
+
+    function generateLicenseKey() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let key = 'AETERNA-HNTR-';
+      for (let i = 0; i < 4; i++) key += chars.charAt(Math.floor(Math.random() * chars.length));
+      key += '-';
+      for (let i = 0; i < 4; i++) key += chars.charAt(Math.floor(Math.random() * chars.length));
+      return key;
+    }
+
+    function processPayment() {
+      const key = generateLicenseKey();
+      const now = new Date();
+      const exp = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days valid
+
+      const licData = {
+        key: key,
+        service: currentService,
+        price: currentPrice,
+        created: now.toISOString().split('T')[0],
+        expires: exp.toISOString().split('T')[0],
+        daysLeft: 30
+      };
+
+      localStorage.setItem('aeterna_active_license', JSON.stringify(licData));
+      closeCheckout();
+      renderActiveLicense();
+
+      alert(`🎉 Успешно плащане!\n\nВашият Активационен Ключ: ${key}\n\nКлючът е запазен във вашия профил.`);
+    }
+
+    function renderActiveLicense() {
+      const saved = localStorage.getItem('aeterna_active_license');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          document.getElementById('lic-key-text').innerText = data.key;
+          document.getElementById('lic-service-name').innerText = data.service;
+          document.getElementById('lic-exp-date').innerText = data.expires;
+          document.getElementById('lic-days-left').innerText = data.daysLeft + ' дни';
+          document.getElementById('active-license-box').style.display = 'block';
+        } catch {}
+      }
+    }
+
+    function validateKey() {
+      const input = document.getElementById('val-input').value.trim();
+      const res = document.getElementById('val-result');
+      res.style.display = 'block';
+
+      if (input.startsWith('AETERNA-')) {
+        res.style.color = 'var(--accent-green)';
+        res.innerHTML = '✅ ВАЛИДЕН КЛЮЧ • АКТИВЕН АБОНАМЕНТ (30 Дни Оставащи)';
+      } else {
+        res.style.color = '#ff4444';
+        res.innerHTML = '❌ НЕВАЛИДЕН ИЛИ ИЗТЕКЪЛ КЛЮЧ';
+      }
+    }
+
+    // Check for existing key on load
+    renderActiveLicense();
+  </script>
+</body>
+</html>
